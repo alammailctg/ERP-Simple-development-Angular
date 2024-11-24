@@ -1,0 +1,209 @@
+<style>
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- Loading Indicator -->
+<div *ngIf="loading" class="loading-overlay">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<div class="container mt-4">
+  
+  <!-- Search Section -->
+  <div class="card mb-3">
+    <div class="card-header text-white"  style="background-color: #3979b9e1; shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">Search Criteria</div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label for="dateFrom" class="form-label">From Date</label>
+          <input type="date" [(ngModel)]="dateFromInput" class="form-control" id="dateFrom" />
+        </div>
+        <div class="col-md-3">
+          <label for="dateTo" class="form-label">To Date</label>
+          <input type="date" [(ngModel)]="dateToInput" class="form-control" id="dateTo" />
+        </div>
+        <div class="col-md-4">
+          <label for="criteriaName" class="form-label">Search Order Items</label>
+          <input type="search" [(ngModel)]="criteriaName" class="form-control" id="criteriaName" placeholder="Search Order Items" />
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button class="btn btn-primary me-2" (click)="getSalesOrders()">
+            <i class="fas fa-search"></i> Search
+          </button>
+          <button class="btn btn-secondary" (click)="resetFilters()">
+            <i class="fas fa-undo"></i> Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approval Section -->
+  <div class="card mb-3">
+    <div class="card-header text-white" style="background-color: #3979b9e1;">
+      Approval Actions
+    </div>
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <select [(ngModel)]="selectedStatusId" class="form-select me-2" style="width: auto;">
+            <option value="0" disabled selected>Select Status</option>
+            <option value="2">Approve</option>
+            <option value="4">Reject</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" (click)="changeApprovalStatus()">Change</button>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" [(ngModel)]="checkedAll" (change)="toggleAllChecks()" class="form-check-input" id="checkedAll" />
+          <label class="form-check-label" for="checkedAll">Select All</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   
+  <!-- Data List Section -->
+  <div class="card mb-3">
+    <div class="card-header" style="background-color: #3979b9; color: white; font-weight: bold;">
+      Sales Orders
+    </div>
+    <div class="card-body">
+      <!-- Pagination Section top -->
+   <div class="d-flex justify-content-between align-items-center mt-3">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" *ngIf="currentPage > 1">
+          <a class="page-link" (click)="changePage(currentPage - 1)">Previous</a>
+        </li>
+        <li class="page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+          <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+        </li>
+        <li class="page-item" *ngIf="currentPage < totalPages">
+          <a class="page-link" (click)="changePage(currentPage + 1)">Next</a>
+        </li>
+      </ul>
+    </nav>
+    <div>
+      <select [(ngModel)]="pageSize" (change)="getSalesOrders()" class="form-select">
+        <option *ngFor="let size of [6, 10, 20, 50]" [value]="size">{{ size }}</option>
+      </select>
+    </div>
+  </div>
+  <hr>
+      <div *ngIf="salesOrders && salesOrders.length > 0; else noOrders">
+        <div *ngFor="let order of salesOrders" class="border-bottom py-3 mb-3">
+          <div class="row align-items-center">
+            <div class="col-md-3">
+              <a href="/salesOrder/{{ order.id }}" class="text-decoration-none text-primary">
+                <strong>{{ order.salesOrderNo }}</strong>
+              </a>
+            </div>
+            <div class="col-md-3">{{ order.customerName }}</div>
+            <div class="col-md-3">{{ order.orderDate | date: 'yyyy-MM-dd' }}</div>
+            <div class="col-md-3 text-end">
+              <button class="btn btn-default btn-sm" aria-label="Edit">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-default btn-sm" aria-label="Delete" (click)="onDiscard(order.id)">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+              
+            </div>
+          </div>
+          
+          <div *ngIf="order.orderItems && order.orderItems.length > 0" class="mt-2">
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered mt-2">
+                <thead class="table-light">
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Invoice Quantity</th>
+                    <th>Balance Quantity</th>
+                    <th>Amount</th>
+                    <th>Select</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of order.orderItems">
+                    <td>{{ item.productName }}</td>
+                    <td>{{ item.price | currency }}</td>
+                    <td>{{ item.quantity }} {{ item.unitName }}</td>
+                    <td>{{ item.invoiceQuantity || 0 }} {{ item.unitName }}</td>
+                    <td>{{ item.balanceQuantity }} {{ item.unitName }}</td>
+                    <td>{{ item.amount | currency }}</td>
+                    <td>
+                      <input type="checkbox" [(ngModel)]="item.checked" class="form-check-input" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noOrders>
+        <div class="text-center">
+          <p>No sales orders found.</p>
+        </div>
+      </ng-template>
+       <!-- Pagination Section -->
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" *ngIf="currentPage > 1">
+          <a class="page-link" (click)="changePage(currentPage - 1)">Previous</a>
+        </li>
+        <li class="page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+          <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+        </li>
+        <li class="page-item" *ngIf="currentPage < totalPages">
+          <a class="page-link" (click)="changePage(currentPage + 1)">Next</a>
+        </li>
+      </ul>
+    </nav>
+    <div>
+      <select [(ngModel)]="pageSize" (change)="getSalesOrders()" class="form-select">
+        <option *ngFor="let size of [6, 10, 20, 50]" [value]="size">{{ size }}</option>
+      </select>
+    </div>
+  </div>
+    </div>
+  </div>
+  
+
+ 
+   <div class="card mb-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <select [(ngModel)]="selectedStatusId" class="form-select me-2" style="width: auto;">
+            <option value="0" disabled selected>Select Status</option>
+            <option value="2">Approve</option>
+            <option value="4">Reject</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" (click)="changeApprovalStatus()">Change</button>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" [(ngModel)]="checkedAll" (change)="toggleAllChecks()" class="form-check-input" id="checkedAll" />
+          <label class="form-check-label" for="checkedAll">Select All</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

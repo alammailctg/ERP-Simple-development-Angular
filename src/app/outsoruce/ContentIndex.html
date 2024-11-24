@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M R Incorporation Holding & Management Ltd.</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* Additional styling */
+        .content-section {
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .content-header {
+            font-size: 2rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .contact-info {
+            color: #555;
+        }
+        .footer {
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        /* Style for the map container */
+        #map {
+            width: 100%;
+            height: 500px; /* Adjust height as needed */
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">M R Incorporation</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link slide-button" data-target="#history" href="#">History</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link slide-button" data-target="#current-investment" href="#">Current Investment</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link slide-button" data-target="#future-investment" href="#">Future Investment</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link slide-button" data-target="#contact" href="#">Contact</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-5 pt-4">
+    <!-- Header -->
+    <header class="text-center my-4">
+        <h1>M R Incorporation Holding & Management Ltd.</h1>
+        <h3 class="text-muted">Empowering Progress</h3>
+    </header>
+
+    <!-- History Section -->
+    <div id="history" class="content-section">
+        <h2 class="content-header">History</h2>
+        <p>We consolidated all our business interests into a single holding company, under the brand 'M R Incorporation Holding & Management Limited' in early 2023. Operating from its base in Dubai, UAE, this company enhances efficiency while preserving our philosophy across all ventures.</p>
+    </div>
+
+    <!-- Current Investment Section -->
+    <div id="current-investment" class="content-section" style="display: none;">
+        <h2 class="content-header">Current Investment</h2>
+        <p>With an investment exceeding £150 million across various sectors over the past 14 years, 'M R Incorporation Holding & Management Limited' has showcased its growth and resilience.</p>
+    </div>
+
+    <!-- Future Investment Section -->
+    <div id="future-investment" class="content-section" style="display: none;">
+        <h2 class="content-header">Future Investment</h2>
+        <p>Over the next 2 to 3 years, M R Incorporation Holding & Management Limited plans to invest £200 million in existing ventures and £100 million in selected new opportunities.</p>
+    </div>
+
+    <!-- Contact Section -->
+    <div id="contact" class="content-section" style="display: none;">
+        <h2 class="content-header">Contact Us</h2>
+        <address class="contact-info">
+            <strong>Address:</strong> 71-75 Shelton Street, Covent Garden London WC2H 9JQ, United Kingdom<br>
+            <strong>Email:</strong> contact@mrinc.co.uk | legal.contact@mrinc.co.uk | media.contact@mrinc.co.uk
+        </address>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- Leaflet.js Library -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>© 2024 M R INCORPORATION, ALL RIGHTS RESERVED.</p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // jQuery for sliding animations and section toggling
+    $(document).ready(function() {
+        $('.slide-button').click(function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            var target = $(this).data('target');
+            $('.content-section').hide();  // Hide all sections
+            $(target).fadeIn();  // Show the target section
+            $('html, body').animate({
+                scrollTop: $(target).offset().top - $('.navbar').outerHeight() // Adjust scroll for fixed navbar
+            }, 500);
+        });
+    });
+</script>
+<script>
+    // Wait for the page to load fully
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize the map and set its view to a global center point with zoom level
+        var map = L.map('map').setView([20, 0], 2); // Global view centered near the equator
+
+        // Set up the OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Example markers with dynamic popup content
+        var locations = [
+            { coords: [51.5074, -0.1278], name: "London", description: "Capital of the UK" },
+            { coords: [40.7128, -74.0060], name: "New York", description: "City in USA" },
+            { coords: [35.6895, 139.6917], name: "Tokyo", description: "Capital of Japan" }
+        ];
+
+        locations.forEach(function (location) {
+            // Add a marker for each location
+            var marker = L.marker(location.coords).addTo(map);
+
+            // Bind popup with initial description
+            marker.bindPopup("<b>" + location.name + "</b><br>" + location.description);
+
+            // Mouseover event to display dynamic info
+            marker.on('mouseover', function() {
+                this.openPopup();
+            });
+            marker.on('mouseout', function() {
+                this.closePopup();
+            });
+        });
+
+        // Adjust map's responsiveness on window resize
+        window.addEventListener("resize", function () {
+            map.invalidateSize();
+        });
+    });
+</script>
+
+</body>
+</html>

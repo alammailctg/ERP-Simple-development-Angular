@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Earth</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #globe {
+            width: 300px;
+            height: 300px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Blue_Marble_2002.png/640px-Blue_Marble_2002.png');
+            background-size: cover;
+            border-radius: 50%;
+            animation: rotate 10s linear infinite;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotateY(0);
+            }
+            to {
+                transform: rotateY(360deg);
+            }
+        }
+
+        .marker {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+        }
+
+        .tooltip {
+            position: absolute;
+            display: none;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div id="globe"></div>
+<div class="tooltip" id="tooltip"></div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const locations = {
+            'USA': {top: '50%', left: '70%', message: 'United States'},
+            'India': {top: '30%', left: '45%', message: 'India'},
+            'Brazil': {top: '60%', left: '40%', message: 'Brazil'},
+            'Australia': {top: '70%', left: '70%', message: 'Australia'},
+            'China': {top: '25%', left: '60%', message: 'China'},
+        };
+
+        $.each(locations, function (country, info) {
+            $('<div>')
+                .addClass('marker')
+                .css({
+                    top: info.top,
+                    left: info.left,
+                })
+                .appendTo('#globe')
+                .mouseenter(function (event) {
+                    $('#tooltip')
+                        .text(info.message)
+                        .css({
+                            top: event.pageY - 30,
+                            left: event.pageX + 10
+                        })
+                        .fadeIn();
+                })
+                .mouseleave(function () {
+                    $('#tooltip').fadeOut();
+                });
+        });
+    });
+</script>
+
+</body>
+</html>

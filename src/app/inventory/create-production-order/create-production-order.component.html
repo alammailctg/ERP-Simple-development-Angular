@@ -1,0 +1,211 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+   </style>
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+      <div class="card-header text-white" style="background-color: #3979b9e1;">
+          <h4 class="mb-0">Production Order Entry</h4>
+      </div>
+      <div class="card-body">
+          <!-- Production Order Form -->
+          <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+
+              <!-- Tabs Section -->
+              <ul class="nav nav-tabs mb-3" id="productionTabs" role="tablist">
+                  <li class="nav-item">
+                      <button class="nav-link active" id="product-detail-tab" data-bs-toggle="tab" data-bs-target="#product-detail" type="button">Production Details</button>
+                  </li>
+                  <li class="nav-item">
+                      <button class="nav-link" id="associated-routing-tab" data-bs-toggle="tab" data-bs-target="#associated-routing" type="button">Order Entry</button>
+                  </li>
+                  <li class="nav-item">
+                      <button class="nav-link" id="product-component-tab" data-bs-toggle="tab" data-bs-target="#product-component" type="button">Product Component</button>
+                  </li>
+                  <li class="nav-item">
+                      <button class="nav-link" id="resources-tab" data-bs-toggle="tab" data-bs-target="#resources" type="button">Resources</button>
+                  </li>
+                  <li class="nav-item">
+                      <button class="nav-link" id="attribute-tab" data-bs-toggle="tab" data-bs-target="#attribute" type="button">Attribute</button>
+                  </li>
+              </ul>
+
+              <div class="tab-content">
+                  <div class="tab-pane fade show active" id="product-detail" role="tabpanel">
+                    <div class="row mb-3">
+                      <div class="col-md-4">
+                          <label>Production Order No</label>
+                          <input type="text" formControlName="productionOrderNo" class="form-control" readonly />
+                      </div>
+                      <div class="col-md-4">
+                          <label>Scheduled Date</label>
+                          <input type="date" class="form-control" formControlName="productionStartDate" required>
+                          <div *ngIf="submitted && orderForm.get('productionStartDate')?.errors?.['required']" class="text-danger">
+                            Schedule date is required.
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <label>Expected Date</label>
+                          <input type="date" class="form-control" formControlName="productionEndDate" required>
+                          <div *ngIf="submitted && orderForm.get('productionEndDate')?.errors?.['required']" class="text-danger">
+                            Expected date is required.
+                          </div>
+                      </div>
+                   
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-md-4">
+                          <label>Initiator</label>
+                          <select class="form-control" formControlName="initiatorId" required>
+                              <option value="1">Kharul</option>
+                              <option value="2">Joshim</option>
+                              <option value="3">Taher</option>
+                          </select>
+                          <div *ngIf="submitted && orderForm.get('initiatorId')?.errors?.['required']" class="text-danger">
+                            Initiator selection is required.
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                        <label>Assign To</label>
+                        <select class="form-control" formControlName="assignedToId" required>
+                            <option value="1">Jafor</option>
+                            <option value="2">Anik</option>
+                            <option value="3">Mamun</option>
+                        </select>
+                        <div *ngIf="submitted && orderForm.get('assignedToId')?.errors?.['required']" class="text-danger">
+                            Assigned to selection is required.
+                          </div>
+                    </div>
+
+                      <div class="col-md-4">
+                          <label>Order Priority</label>
+                          <select class="form-control" formControlName="orderPriorityId" required>
+                              <option value="1">High</option>
+                              <option value="2">Medium</option>
+                              <option value="3">Low</option>
+                          </select>
+                          <div *ngIf="submitted && orderForm.get('orderPriorityId')?.errors?.['required']" class="text-danger">
+                            Order Priority to selection is required.
+                          </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label>Branch</label>
+                        <select class="form-control" formControlName="branchId" required>
+                            <option value="1">JSBL</option>
+                            <option value="2">PSBL</option>
+                            <option value="3">PSRL</option>
+                        </select>
+                        <div *ngIf="submitted && orderForm.get('branchId')?.errors?.['required']" class="text-danger">
+                            branchId Priority to selection is required.
+                          </div>
+                    </div>
+                    <div class="col-md-4">
+                      <label>Initial Cost</label>
+                      <input type="text" formControlName="initialProductionCost" class="form-control" />
+                      <div *ngIf="submitted && orderForm.get('initialProductionCost')?.errors?.['required']" class="text-danger">
+                        initial Production Cost date is required.
+                      </div>
+                  </div>
+                    <div class="col-md-4">
+                      <label>Remarks</label>
+                      <textarea class="form-control" formControlName="remarks" rows="1"></textarea>
+                      <div *ngIf="submitted && orderForm.get('remarks')?.errors?.['required']" class="text-danger">
+                        remarks is required.
+                      </div>
+                  </div>
+                  </div>
+                  
+                  
+                  <table class="table table-bordered mt-3">
+                      <thead class="table-light">
+                          <tr>
+                              <th>#</th>
+                              <th>Product Name</th>
+                              <th>Requested Quantity</th>
+                              <th>UOM</th>
+                              <th>Action</th>
+                          </tr>
+                      </thead>
+                      <tbody formArrayName="products">
+                          <tr *ngFor="let product of productRows.controls; let i = index" [formGroupName]="i">
+                              <td>{{ i + 1 }}</td>
+                        
+                              <td>
+                                <select formControlName="productId" class="form-select" required>
+                                  <option value="">Select Product</option>
+                                  <option *ngFor="let product of products" [value]="product.id">{{ product.name }}</option>
+                              </select>
+                              <div *ngIf="submitted && product.get('productId')?.errors?.['required']" class="text-danger">Product is required.</div>
+                              
+                              </td>
+
+
+                              <td>
+                                <input type="number" class="form-control" formControlName="quantityRequested">
+                                <div *ngIf="submitted && product.get('quantityRequested')?.errors?.['required']" class="text-danger">
+                                  Requested quantity is required.
+                                </div>
+                                <div *ngIf="submitted && product.get('quantityRequested')?.errors?.['pattern']" class="text-danger">
+                                  Enter a valid quantity.
+                                </div>
+                              </td>
+                              <td>
+                                <!-- <input type="text" class="form-control" formControlName="uom"> -->
+                                <div class="col-md-4">
+                                  
+                                  <select class="form-control" formControlName="unitId" required>
+                                      <option value="1">KG</option>
+                                      <option value="2">Pcs</option>
+                                      <option value="3">Lot</option>
+                                  </select>
+                                  <div *ngIf="submitted && orderForm.get('unitId')?.errors?.['required']" class="text-danger">
+                                      UOM selection is required.
+                                    </div>
+                              </div>
+                            </td>
+                              <td>
+                                  <button class="btn btn-default btn-sm" aria-label="Delete" (click)="deleteProductionDetail(i)">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                  </button>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                  <button class="btn btn-success btn-sm" (click)="addProduct()">
+                    <i class="fa-solid fa-plus"></i> Add Product
+                  </button>
+                  </div>
+
+                  <!-- Other Tabs -->
+                  <div class="tab-pane fade" id="associated-routing" role="tabpanel">
+                      
+                  </div>
+              </div>
+              <button type="submit" class="btn btn-primary" [disabled]="loading">
+                <i *ngIf="loading" class="fa fa-spinner fa-spin"></i> Submit
+            </button>
+
+          </form>
+      </div>
+  </div>
+</div>

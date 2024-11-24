@@ -1,0 +1,122 @@
+<style>
+  .loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+ </style>
+
+<div class="loading-overlay" *ngIf="loading" @fadeInOut>
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <h3>Create Sales Order</h3>
+  <hr>
+  <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="orderDate" class="form-label">Order Date</label>
+        <input type="date" formControlName="orderDate" class="form-control" required />
+        <div *ngIf="submitted && orderForm.get('orderDate')?.errors?.['required']" class="text-danger">
+          Order Date is required.
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label for="customerId" class="form-label">Customer</label>
+        <select formControlName="customerId" class="form-select" required>
+          <option value="">Select Customer</option>
+          <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}</option>
+        </select>
+        <div *ngIf="submitted && orderForm.get('customerId')?.errors?.['required']" class="text-danger">
+          Customer selection is required.
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label for="deliveryPlane" class="form-label">Delivery Plane</label>
+        <input type="text" formControlName="deliveryPlane" class="form-control" required />
+        <div *ngIf="submitted && orderForm.get('deliveryPlane')?.errors?.['required']" class="text-danger">
+          Delivery Plane is required.
+        </div>
+        <div *ngIf="submitted && orderForm.get('deliveryPlane')?.errors?.['minlength']" class="text-danger">
+          Delivery Plane must be at least 3 characters.
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Rows -->
+    <div class="card">
+      <div class="card-header">
+        <h5>Product Details</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Discount %</th>
+              <th>Quantity</th>
+              <th>Unit</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="products">
+            <tr *ngFor="let product of productRows.controls; let i = index" [formGroupName]="i">
+              <td>
+                <select formControlName="productId" class="form-select" required>
+                  <option value="">Select Product</option>
+                  <option *ngFor="let product of products" [value]="product.id">{{ product.name }}</option>
+                </select>
+                <div *ngIf="submitted && product.get('productId')?.errors?.['required']" class="text-danger">Product is required.</div>
+              </td>
+              <td>
+                <input type="text" formControlName="price" class="form-control" required />
+                <div *ngIf="submitted && product.get('price')?.errors?.['required']" class="text-danger">Price is required.</div>
+                <div *ngIf="submitted && product.get('price')?.errors?.['pattern']" class="text-danger">Invalid price.</div>
+              </td>
+              <td>
+                <input type="text" formControlName="discountPercent" class="form-control" required />
+                <!-- <div *ngIf="submitted && product.get('discountPercent')?.errors?.['required']" class="text-danger">Discount is required.</div> -->
+                <div *ngIf="submitted && (product.get('discountPercent')?.errors?.['min'] || product.get('discountPercent')?.errors?.['max'])" class="text-danger">Discount must be 0-100%.</div>
+              </td>
+              <td>
+                <input type="text" formControlName="quantity" class="form-control" required />
+                <div *ngIf="submitted && product.get('quantity')?.errors?.['required']" class="text-danger">Quantity is required.</div>
+                <div *ngIf="submitted && product.get('quantity')?.errors?.['min']" class="text-danger">Min 1 required.</div>
+              </td>
+              <td>
+                <select formControlName="unitId" class="form-select" required>
+                  <option value="">Select Unit</option>
+                  <option *ngFor="let unit of units" [value]="unit.id">{{ unit.name }}</option>
+                </select>
+                <div *ngIf="submitted && product.get('unitId')?.errors?.['required']" class="text-danger">Unit required.</div>
+              </td>
+              <td>
+                <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeProduct(i)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="btn btn-outline-info btn-sm" (click)="addProduct()">Add Product</button>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="d-flex justify-content-end mt-4">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div>

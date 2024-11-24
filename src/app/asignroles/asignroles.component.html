@@ -1,0 +1,41 @@
+
+  <div class="container my-4">
+    <!-- User Dropdown -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <div class="card shadow-sm border-0 rounded">
+                <div class="card-body"  style="background-color:#e3e9efe1; border: 1px solid lightgray;">
+                    <div class="form-group mb-3">
+                        <label for="ddlUserId" class="form-label fw-semibold">Select User</label>
+                        <select id="ddlUserId" class="form-select" [(ngModel)]="selectedUserId" (change)="onUserChange()">
+                            <option value="" disabled>Select a user</option>
+                            <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Roles Checkboxes -->
+    <div *ngIf="allRoles.length > 0" class="row justify-content-center mt-4">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <div class="card shadow-sm border-0 rounded">
+                <div class="card-body"  style="background-color:#e3e9efe1; border: 1px solid lightgray;">
+                    <h5 class="fw-semibold mb-3">User Roles</h5>
+                    <div *ngFor="let role of allRoles" class="form-check mb-2">
+                        <input
+                            type="checkbox"
+                            class="form-check-input"
+                            id="role{{ role.id }}"
+                            [(ngModel)]="role.isChecked"
+                            [value]="role.id"
+                        />
+                        <label class="form-check-label ms-2" [for]="'role'+role.id">{{ role.name }}</label>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-info" (click)="assignRoles()">Assign Role</button>
+            </div>
+        </div>
+    </div>
+</div>
