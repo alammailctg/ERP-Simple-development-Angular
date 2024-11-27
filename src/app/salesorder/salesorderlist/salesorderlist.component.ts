@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { SalesOrderService } from '../../services/sales-order.service';
 import { SalesOrder } from '../../model/sales-order.model';
+import { SignalRService } from '../../services/signal-r.service';
  
 @Component({
   selector: 'app-salesorderlist',
@@ -35,12 +36,19 @@ export class SalesorderlistComponent implements OnInit {
     dateToInput: string = '2030-12-31';   // Default to December 31, 2030
     criteriaName: string = '';
   
-    constructor(private salesOrderService: SalesOrderService) { }
+    constructor(private salesOrderService: SalesOrderService,
+      private signalRService: SignalRService) { }
     
-  ngOnInit(): void {
-    this.getSalesOrders();
-  }
-  
+      ngOnInit(): void {
+        this.getSalesOrders(); // Initial load of data
+        this.signalRService.startConnection();
+        this.signalRService.listenForUpdates(() => {
+          this.getSalesOrders(); // Refresh sales order list on update
+        });
+      }
+
+    
+
   toggleAllChecks(): void {
     this.salesOrders.forEach(order =>
       order.orderItems.forEach(item => item.checked = this.checkedAll)

@@ -1,0 +1,16 @@
+
+ <style>
+  .alert {
+    margin-bottom: 1rem;
+}
+ </style>
+
+<div class="container mt-4">
+  <!-- Notification area -->
+  <div id="notification-area">
+      <div *ngFor="let notification of notifications" class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Notification:</strong> {{ notification }}
+          <button type="button" class="btn-close" (click)="dismissNotification(notification)" aria-label="Close"></button>
+      </div>
+  </div>
+</div>

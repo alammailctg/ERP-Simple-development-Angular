@@ -37,7 +37,6 @@ export class CreatesalesorderComponent {
   ngOnInit(): void {
     if (this.productRows.length === 0) {
       this.addProduct();
-      
     }
     this.fetchProducts();
     this.fetchCustomers();

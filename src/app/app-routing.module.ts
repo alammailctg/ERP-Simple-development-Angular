@@ -11,6 +11,7 @@ import { ProductionOrderService } from './services/production-order.service';
 import { CreateProductionOrderComponent } from './inventory/create-production-order/create-production-order.component';
 import { ProductionOrderListComponent } from './inventory/production-order-list/production-order-list.component';
 import { SalesReportComponent } from './reportmanager/sales-report/sales-report.component';
+import { NotificationComponent } from './notification/notification.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,12 @@ const routes: Routes = [
     path: 'sales-report',
     component: SalesReportComponent
   },
+
+  {
+    path: 'notification',
+    component: NotificationComponent
+  },
+
 
   {
     path: 'admin',

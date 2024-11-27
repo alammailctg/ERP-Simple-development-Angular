@@ -25,6 +25,7 @@ import { ProductionOrderListComponent } from './inventory/production-order-list/
 import { GetAllProductionOrderComponent } from './inventory/get-all-production-order/get-all-production-order.component';
 import { SalesReportComponent } from './reportmanager/sales-report/sales-report.component';
 import { StimulsoftViewerModule } from 'stimulsoft-viewer-angular';
+import { NotificationComponent } from './notification/notification.component';
  
 
  
@@ -42,8 +43,8 @@ import { StimulsoftViewerModule } from 'stimulsoft-viewer-angular';
     CreateProductionOrderComponent,
     ProductionOrderListComponent,
     GetAllProductionOrderComponent,
-    SalesReportComponent
-    
+    SalesReportComponent,
+    NotificationComponent,
     
   ],
   imports: [
