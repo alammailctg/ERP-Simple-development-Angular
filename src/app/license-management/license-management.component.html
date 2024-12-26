@@ -1,0 +1,120 @@
+<div class="container mt-5">
+    <h1 class="text-center mb-4">License Management</h1>
+  
+    <!-- License Generation Form -->
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h2 class="h5 mb-0">Generate License</h2>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="generateForm" (ngSubmit)="onGenerateLicense()">
+          <div class="mb-3">
+            <label for="clientName" class="form-label">Client Name</label>
+            <input
+              id="clientName"
+              formControlName="clientName"
+              type="text"
+              class="form-control"
+              placeholder="Enter client name"
+              required
+            />
+          </div>
+  
+          <div class="mb-3">
+            <label for="startDate" class="form-label">Start Date</label>
+            <input
+              id="startDate"
+              formControlName="startDate"
+              type="date"
+              class="form-control"
+              required
+            />
+          </div>
+  
+          <div class="mb-3">
+            <label for="expiryDate" class="form-label">Expiry Date</label>
+            <input
+              id="expiryDate"
+              formControlName="expiryDate"
+              type="date"
+              class="form-control"
+              required
+            />
+          </div>
+  
+          <div class="mb-3">
+            <label for="secretKey" class="form-label">Secret Key</label>
+            <input
+              id="secretKey"
+              formControlName="secretKey"
+              type="password"
+              class="form-control"
+              placeholder="Enter secret key"
+              required
+            />
+          </div>
+  
+          <button
+            type="submit"
+            class="btn btn-primary w-100"
+            [disabled]="generateForm.invalid"
+          >
+            Generate License
+          </button>
+        </form>
+  
+        <div *ngIf="generatedLicense" class="alert alert-success mt-3">
+          <h5>Generated License Key</h5>
+          <p>{{ generatedLicense }}</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- License Validation Form -->
+    <div class="card">
+      <div class="card-header bg-secondary text-white">
+        <h2 class="h5 mb-0">Validate License</h2>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="validateForm" (ngSubmit)="onValidateLicense()">
+          <div class="mb-3">
+            <label for="licenseKey" class="form-label">License Key</label>
+            <textarea
+              id="licenseKey"
+              formControlName="licenseKey"
+              class="form-control"
+              rows="3"
+              placeholder="Enter license key"
+              required
+            ></textarea>
+          </div>
+  
+          <div class="mb-3">
+            <label for="validationSecretKey" class="form-label">Secret Key</label>
+            <input
+              id="validationSecretKey"
+              formControlName="secretKey"
+              type="password"
+              class="form-control"
+              placeholder="Enter secret key"
+              required
+            />
+          </div>
+  
+          <button
+            type="submit"
+            class="btn btn-secondary w-100"
+            [disabled]="validateForm.invalid"
+          >
+            Validate License
+          </button>
+        </form>
+  
+        <div *ngIf="validationResult" class="alert alert-info mt-3">
+          <h5>Validation Result</h5>
+          <p>{{ validationResult }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  

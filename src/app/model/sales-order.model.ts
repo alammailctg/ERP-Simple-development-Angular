@@ -2,7 +2,7 @@ export interface SalesOrder {
     id: number;
     salesOrderNo: string;
     customerName: string;
-    orderDate: string;
+    orderedDate: string;
     selectedStatusId:number;
     orderItems: OrderItem[];
   }

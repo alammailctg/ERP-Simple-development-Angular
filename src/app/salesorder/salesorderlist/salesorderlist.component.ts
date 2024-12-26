@@ -36,25 +36,20 @@ export class SalesorderlistComponent implements OnInit {
     dateToInput: string = '2030-12-31';   // Default to December 31, 2030
     criteriaName: string = '';
   
-    constructor(private salesOrderService: SalesOrderService,
-      private signalRService: SignalRService) { }
+    constructor(private salesOrderService: SalesOrderService, private signalRService: SignalRService) { }
     
-      ngOnInit(): void {
+  ngOnInit(): void {
         this.getSalesOrders(); // Initial load of data
         this.signalRService.startConnection();
         this.signalRService.listenForUpdates(() => {
           this.getSalesOrders(); // Refresh sales order list on update
         });
       }
-
-    
-
   toggleAllChecks(): void {
     this.salesOrders.forEach(order =>
       order.orderItems.forEach(item => item.checked = this.checkedAll)
     );
   }
- 
   resetFilters(): void {
     this.dateFromInput = '';
     this.dateToInput = '';
@@ -72,7 +67,7 @@ export class SalesorderlistComponent implements OnInit {
         DateTo: this.dateToInput ? new Date(this.dateToInput).toISOString().split('T')[0] : '',
       };
   
-      this.salesOrderService.getSalesOrder(criteria).subscribe({
+      this.salesOrderService.getPendingApprovalSalesOrders(criteria).subscribe({
         next: (response:any) => {
           this.salesOrders = response.salesOrders;
           this.totalCount = response.totalCount;
@@ -89,7 +84,6 @@ export class SalesorderlistComponent implements OnInit {
         }
       });
     }
-  
     calculatePages(): number[] {
       const maxVisiblePages = 6;
       const startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
@@ -102,14 +96,12 @@ export class SalesorderlistComponent implements OnInit {
   
       return pages;
     }
-  
     changePage(page: number) {
       if (page !== this.currentPage) {
         this.currentPage = page;
         this.getSalesOrders();
       }
     }
-
     changeApprovalStatus(): void {
       const selectedOrderItems = this.salesOrders.flatMap(order =>
         order.orderItems
@@ -127,7 +119,6 @@ export class SalesorderlistComponent implements OnInit {
         });
       }
     }
-
     onDiscard(salesOrderId: number): void {
       // Create a Bootstrap modal confirmation
       const confirmation = confirm('Are you sure you want to delete this order?');
@@ -144,6 +135,5 @@ export class SalesorderlistComponent implements OnInit {
         console.log('Order deletion canceled.');
       }
     }
-    
-  }
+}
  

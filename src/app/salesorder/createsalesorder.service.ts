@@ -17,6 +17,6 @@ export class CreatesalesorderService {
  public createSalesOrder(salesOrder:SalesOrderRequest):Observable<void>{
     const headers=new  HttpHeaders({'Content-Type': 'application/json'});
     const jsonData=JSON.stringify(salesOrder);
-    return this.http.post<void>(`${environment.apiUrl}/SalesOrder/CreateSalesOrder`,jsonData,{headers, withCredentials:true});
+    return this.http.post<void>(`${environment.apiUrl}/CreateSalesOrder/Create`,jsonData,{headers, withCredentials:true});
   }
 }

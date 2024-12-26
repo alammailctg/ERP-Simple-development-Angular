@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
+import { environment } from '../../environment';
+
 
 @Component({
     selector: 'app-notification',
@@ -13,7 +15,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // Initialize SignalR connection
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl('https://localhost:44399/notificationHub') // Ensure the route matches backend configuration
+            .withUrl(`${environment.apiUrl}/notificationHub`) // Ensure the route matches backend configuration
             .build();
 
         // Listen for notifications

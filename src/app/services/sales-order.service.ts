@@ -9,10 +9,10 @@ import { environment } from '../../environment';
   providedIn: 'root'
 })
 export class SalesOrderService extends BaseService<SalesOrderRequest, SalesOrderResponse> {
-  protected override baseUrl: string = `${environment.apiUrl}/SalesOrder/CreateSalesOrder`;
-  specificUrl: string = `${environment.apiUrl}/SalesOrder/AddSalesOrders`;
+  protected override baseUrl: string = `${environment.apiUrl}/CreateSalesOrder/Create`;
+  specificUrl: string = `${environment.apiUrl}/CreateSalesOrder/AddSalesOrders`;
   getSalesOrderUrl: string = `${environment.apiUrl}/SalesOrder/GetAllUnApprovedSalesOrders`;
-  approveOrderUrl: string = `${environment.apiUrl}/SalesOrder/ApproveOrderItems`;
+  approveOrderUrl: string = `${environment.apiUrl}/PendingApprovalSalesOrder/ApprovalAction`;
   siteUrl:string= `${environment.apiUrl}/SalesOrder`;
 
 
@@ -29,8 +29,13 @@ export class SalesOrderService extends BaseService<SalesOrderRequest, SalesOrder
     return this.http.post(this.specificUrl, {}, { headers, responseType: 'text' });
   }
 
-  getSalesOrder(criteria:any):Observable<any>{
-    return this.http.post<any>(`${environment.apiUrl}/SalesOrder/GetAllUnApprovedSalesOrders`,criteria);
+  getPendingApprovalSalesOrders(criteria:any):Observable<any>{
+    return this.http.post<any>(`${environment.apiUrl}/PendingApprovalSalesOrder/GetAll`,criteria);
+  }
+
+  getApprovedSalesOrders(criteria:any):Observable<any>
+  {
+    return this.http.post<any>(`${environment.apiUrl}/ApprovedSalesOrder/GetAll`,criteria)
   }
 
   approveOrderItems(postArr: any[]): Observable<any> {

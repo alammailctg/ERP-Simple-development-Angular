@@ -12,11 +12,31 @@ import { CreateProductionOrderComponent } from './inventory/create-production-or
 import { ProductionOrderListComponent } from './inventory/production-order-list/production-order-list.component';
 import { SalesReportComponent } from './reportmanager/sales-report/sales-report.component';
 import { NotificationComponent } from './notification/notification.component';
+import { LicenseManagementComponent } from './license-management/license-management.component';
+import { PracticeComponent } from './practice/practice.component';
+import { GetApprovedSalesordersComponent } from './salesorder/get-approved-salesorders/get-approved-salesorders.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LoginComponent
+  },
+
+  
+  {
+    path: 'practice',
+    component: PracticeComponent
+  },
+
+  {
+    path: 'practice2',
+    component: PracticeComponent
+  },
+
+
+  {
+    path: 'license',
+    component: LicenseManagementComponent
   },
 
   {
@@ -50,6 +70,11 @@ const routes: Routes = [
         path: 'get-production-order',
         component:ProductionOrderListComponent
       },
+      {
+        path: 'get-approved-salesorder',
+        component: GetApprovedSalesordersComponent
+      },
+    
       {
         path: 'sales-order-list',
         component: SalesorderlistComponent

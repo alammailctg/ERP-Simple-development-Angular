@@ -26,6 +26,10 @@ import { GetAllProductionOrderComponent } from './inventory/get-all-production-o
 import { SalesReportComponent } from './reportmanager/sales-report/sales-report.component';
 import { StimulsoftViewerModule } from 'stimulsoft-viewer-angular';
 import { NotificationComponent } from './notification/notification.component';
+import { LicenseManagementComponent } from './license-management/license-management.component';
+import { PracticeComponent } from './practice/practice.component';
+import { Practice2Component } from './practice2/practice2.component';
+import { GetApprovedSalesordersComponent } from './salesorder/get-approved-salesorders/get-approved-salesorders.component';
  
 
  
@@ -45,6 +49,10 @@ import { NotificationComponent } from './notification/notification.component';
     GetAllProductionOrderComponent,
     SalesReportComponent,
     NotificationComponent,
+    LicenseManagementComponent,
+    PracticeComponent,
+    Practice2Component,
+    GetApprovedSalesordersComponent,
     
   ],
   imports: [

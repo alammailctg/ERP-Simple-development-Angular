@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CreatesalesorderService } from '../createsalesorder.service';
 import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
@@ -17,7 +17,7 @@ import { environment } from '../../../environment';
   templateUrl: './createsalesorder.component.html',
   styleUrls: ['./createsalesorder.component.css']
 })
-export class CreatesalesorderComponent {
+export class CreatesalesorderComponent implements OnInit {
   orderForm: FormGroup;
   submitted = false; 
   loading = false; 
